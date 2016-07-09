@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<link rel="stylesheet" href="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.css" />
+<script src="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+<div id="map"></div>
+<script>
+
+$(document).ready(function() {
+
+  var mapquestUrl = 'http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png';
+  var subDomains = ['otile1', 'otile2', 'otile3', 'otile4'];
+  var mapquestAttrib = '<a href="http://open.mapquest.com" target="_blank">MapQuest</a>, <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a>';
+
+  var _map = undefined;
+
+  var _setupMap = function(mapDiv) {
+    var options = {
+      /*ID of element on the page where you want the map added*/
+      zoom: 3,
+      /*initial zoom level of the map*/
+      latLng: {
+        lat: 12.65000000,
+        lng: -8.00000000
+      },
+      /*center of map in latitude/longitude */
+      mtype: 'osm',
+      bestFitMargin: 0,
+      /*margin offset from the map viewport when applying a bestfit on shapes*/
+      zoomOnDoubleClick: true, /*zoom in when double-clicking on map*/
+      zoomControl: true, /*don't show the zoom control, it will be added later*/
+      scrollWheelZoom: true,
+
+    };
+
+    _map = L.map(mapDiv[0], options).setView([options.latLng.lat, options.latLng.lng], options.zoom);
+
+    var mapquest = new L.TileLayer(mapquestUrl, {
+      maxZoom: 18,
+      attribution: mapquestAttrib,
+      subdomains: subDomains
+    }).addTo(_map);
+
+    $.getJSON("json/ref_content.json", function(json) {
+
+      var jsonData = json['onds'];
+      var serie = [];
+
+      for (var i in jsonData) {
+        var origin = [jsonData[i]["origin"]["location"]["latitude"], jsonData[i]["origin"]["location"]["longitude"]];
+        var destination = [jsonData[i]["destination"]["location"]["latitude"], jsonData[i]["destination"]["location"]["longitude"]];
+        serie.push([origin,destination])
+      }
+
+    var polygon = L.multiPolygon(serie, {weight:1,color:'#6699FF',opacity:0.2}).addTo(_map);
+
+    });
+  };
+
+  // Bootstrap
+  var $el = $("#map");
+  _setupMap($el);
+
+});
+
+</script>
+</body>
+</html>
