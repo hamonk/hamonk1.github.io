@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="js/jquery-2.1.3.min.js"></script>
+<script src="js/highcharts.js"></script>
+
+<title>Consistency monitoring</title>
+
+</head>
+
+<body>
+
+<h1>Consistency</h1>
+
+<p id="category1">category 1</p>
+<div id="container1" style="width:100%; height:400px;"></div>
+<div id="container2" style="width:100%; height:400px;"></div>
+
+<script type="text/javascript" charset="utf-8" class="init">
+/**
+ * Grid-light theme for Highcharts JS
+ * @author Torstein Honsi
+ */
+
+// Load the fonts
+Highcharts.createElement('link', {
+   href: '//fonts.googleapis.com/css?family=Dosis:400,600',
+   rel: 'stylesheet',
+   type: 'text/css'
+}, null, document.getElementsByTagName('head')[0]);
+
+Highcharts.theme = {
+   colors: ["#7cb5ec", "#f7a35c", "#90ee7e", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee",
+      "#55BF3B", "#DF5353", "#7798BF", "#aaeeee", "#cc33ff", "#ff6600", "#ffcc00", "#cc99ff", "#ff5050", "#73e600", "#9900cc", "#00cc99", "#3333cc"],
+   chart: {
+      backgroundColor: null,
+      style: {
+         fontFamily: "Dosis, sans-serif"
+      }
+   },
+   title: {
+      style: {
+         fontSize: '16px',
+         fontWeight: 'bold',
+         textTransform: 'uppercase'
+      }
+   },
+   tooltip: {
+      borderWidth: 0,
+      backgroundColor: 'rgba(219,219,216,0.8)',
+      shadow: false
+   },
+   legend: {
+      itemStyle: {
+         fontWeight: 'bold',
+         fontSize: '13px'
+      }
+   },
+   xAxis: {
+      gridLineWidth: 1,
+      labels: {
+         style: {
+            fontSize: '12px'
+         }
+      }
+   },
+   yAxis: {
+      minorTickInterval: 'auto',
+      title: {
+         style: {
+            textTransform: 'uppercase'
+         }
+      },
+      labels: {
+         style: {
+            fontSize: '12px'
+         }
+      }
+   },
+   plotOptions: {
+      candlestick: {
+         lineColor: '#404048'
+      }
+   },
+
+   // General
+   background2: '#F0F0EA'
+
+};
+
+// Apply the theme
+Highcharts.setOptions(Highcharts.theme);
+
+var categories = [{'name':'score', 'place':1},
+                  {'name':'score_prd2', 'place':2},
+                  {'name':'score_more', 'place':3}];
+                  //{'name':'ok_prd2_vs_prd1', 'place':4},     
+                  //{'name':'quality_0_1', 'place':5}
+                  //{'name':'quality_0_1_prd2', 'place':6},
+                  //{'name':'quality_other_prd2', 'place':7},
+                  //{'name':'score_prd2_cb', 'place':8},
+                  //{'name':'score_prd2_sameday', 'place':9},
+                  //{'name':'score_prd2_nego', 'place':10}
+                  //{'name':'score_prd2_initial', 'place':11},
+                  //{'name':'score_prd2_revised', 'place':12}];
+
+var issues = [{'name': 'cache_issues_ref_becomes_cheaper_percentage', 'place': 1},
+              {'name': 'cache_issues_ref_becomes_more_expensive_percentage', 'place': 2},
+              {'name': 'ko_progressive_percentage', 'place': 3},
+              {'name': 'js_issues_percentage', 'place': 4},
+              {'name': 'flight_domain_issues_percentage', 'place': 5},
+              {'name': 'four_legs_issues_percentage', 'place': 6},
+              {'name': 'ref_flights_not_found_issues_percentage', 'place': 7},
+              //{'name': 'subsequent_issues_percentage', 'place': 8},
+              {'name': 'sameday_issues_percentage', 'place': 9},
+              {'name': 'tax_issues_percentage', 'place': 10},
+              //{'name': 'abe_issues_percentage', 'place': 11},
+              {'name': 'avl_issues_percentage', 'place': 12},
+              //{'name': 'nego_issues_percentage', 'place': 13},
+              {'name': 'use_same_flights_bookings_prd_cheaper_percentage', 'place': 14},
+              {'name': 'use_same_flights_bookings_ref_cheaper_percentage', 'place': 15},
+              {'name': 'use_same_stops_bookings_prd_cheaper_percentage', 'place': 16},
+              {'name': 'use_same_stops_bookings_ref_cheaper_percentage', 'place': 17},
+              {'name': 'ref_pure_eco_prd_business_percentage', 'place': 18},
+              {'name': 'amadeus_pure_eco_ref_business_percentage', 'place': 19},
+              {'name': 'ref_prd_business_percentage', 'place': 20},
+              {'name': 'remaining_issues_more_percentage', 'place': 21},
+              {'name': 'remaining_issues_less_okavl_percentage', 'place': 22},
+              {'name': 'remaining_issues_less_koavl_percentage', 'place': 23}];
+
+var issues_premium = [{'name': 'cache_issues_ref_becomes_cheaper_percentage', 'place': 1},
+                      {'name': 'cache_issues_ref_becomes_more_expensive_percentage', 'place': 2},
+                      {'name': 'ko_progressive_percentage', 'place': 3},
+                      {'name': 'js_issues_percentage', 'place': 4},
+                      {'name': 'flight_domain_issues_percentage', 'place': 5},
+                      {'name': 'four_legs_issues_percentage', 'place': 6},
+                      {'name': 'ref_flights_not_found_issues_percentage', 'place': 7},
+                      {'name': 'subsequent_issues_percentage', 'place': 8},
+                      {'name': 'sameday_issues_percentage', 'place': 9},
+                      {'name': 'tax_issues_percentage', 'place': 10},
+                      {'name': 'abe_issues_percentage', 'place': 11},
+                      {'name': 'avl_issues_percentage', 'place': 12},
+                      {'name': 'nego_issues_percentage', 'place': 13},
+                      {'name': 'nego_issues_percentage','place': 14},
+                      {'name': 'use_eco_booking_code_percentage', 'place': 15},
+                      {'name': 'ref_pure_prd_exception_percentage', 'place': 16},
+                      {'name': 'use_same_flights_bookings_prd_cheaper_percentage', 'place': 17},
+                      {'name': 'use_same_flights_bookings_ref_cheaper_percentage', 'place': 18},
+                      {'name': 'use_same_stops_bookings_prd_cheaper_percentage', 'place': 19},
+                      {'name': 'use_same_stops_bookings_ref_cheaper_percentage', 'place': 20},
+                      {'name': 'remaining_issues_more_percentage', 'place': 21},
+                      {'name': 'remaining_issues_less_percentage', 'place': 22},
+                      {'name': 'remaining_issues_less_koavl_percentage', 'place': 23}];
+
+
+$(document).ready(function() {
+
+    $.getJSON("json/last_update.json", function(json) {
+        var element = document.getElementById("category1");
+        element.innerHTML = "Last updated:"+json;
+        console.log(json);
+    });
+
+    var options1 = {
+        chart: {
+            renderTo: 'container1', 
+            type: 'line',
+            zoomType: 'x'
+        },
+        title: {
+            text: 'Consistency prd vs. ref'
+        },
+        xAxis: {
+            type: 'datetime'
+        }, 
+        yAxis: {
+            title: {
+                text: 'Score (percentage of match)'
+            },
+            plotLines: [{
+                color: 'red', 
+                width: 3, 
+                dashStyle: 'Solid', 
+                label: {text: 'Target'},
+                value: 90
+            }],
+            ceiling: 100,
+            floor: 0            
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0,
+            width: 300
+        },
+        tooltip: {
+            headerFormat: '{series.name}<br />',
+            pointFormat: '{point.x:%b, %e %H:%M}: <b>{point.y:.1f}%</b>'
+        },         
+        series: _.map(categories, function(element, index) {
+                return {marker: {enabled: false}};
+            })
+    };
+
+    $.getJSON("json/benchmarks_scores.json", function(json) {
+
+        _.each(categories, function(element, index) {
+            options1.series[index].name = json[element['name']];
+        });
+
+        var jsonData = json['data']
+
+        var timestampColumn = _.map(_.pluck(jsonData, 0), Date.parse);
+
+        _.each(categories, function(element, index) {
+            var dataColumn = _.pluck(jsonData, element['place'])
+            options1.series[index].data = _.zip(timestampColumn, dataColumn);
+        });
+
+        var chart_consistency = new Highcharts.Chart(options1);
+        
+    });
+
+    var options2 = {
+
+        chart: {
+            type: 'area',
+            renderTo: 'container2',
+            zoomType: 'x'
+        },
+
+        title: {
+            text: 'Discrepancy explanation'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0,
+            width: 300
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: {
+
+            title: {
+                text: 'Ratio discrepancy type/number of analyzed cases'
+            },
+
+            plotLines: [{
+                color: 'red', 
+                width: 3, 
+                dashStyle: 'Solid', 
+                label: {text: 'Target'},
+                value: 10
+            }],
+            ceiling: 100,
+            floor: 0            
+        },
+
+        tooltip: {
+            headerFormat: '{series.name}<br />',
+            pointFormat: '{point.x:%b, %e %H:%M}: <b>{point.y:.1f}%</b>'
+        }, 
+
+        plotOptions: {
+            area: {
+                stacking: 'normal',
+                lineColor: '#666666',
+                lineWidth: 1,
+                marker: {
+                    lineWidth: 1,
+                    lineColor: '#666666'
+                }
+            }
+        },
+        series: _.map(issues, function(item) {
+            return {marker: {enabled: false}};
+        })
+
+    };
+
+
+    $.getJSON("json/issues.json", function(json) {
+
+        _.each(issues, function(item, index) {
+            options2.series[index].name = json[item['name']];
+        });
+
+        var jsonData = json['data']
+
+        var timestampColumn = _.map(_.pluck(jsonData, 0), Date.parse);
+
+        _.each(issues, function(item, i) {
+            var dataColumn = _.pluck(jsonData, item['place'])
+            options2.series[i].data = _.zip(timestampColumn, dataColumn);
+        });
+
+        var chart_issues = new Highcharts.Chart(options2);
+    });
+});
+
+</script>
+
+</body>
+
+</html>
