@@ -155,26 +155,6 @@ var issues_premium = [{'name': 'cache_issues_ref_becomes_cheaper_percentage', 'p
                       {'name': 'remaining_issues_less_percentage', 'place': 22},
                       {'name': 'remaining_issues_less_koavl_percentage', 'place': 23}];
 
-    var res = _.map(days_from_timestamps, function(item) {
-
-        var d = new Date(item);
-
-        if (d.getDay() == 5) {
-            return {
-                color: 'red',
-                dashStyle: 'longdashdot',
-                value: item,
-                width: 1
-                }
-        } else {
-            return undefined;
-        }     
-    });
-
-    var res1 = _.without(res, undefined);
-    return res1;
-
-}
 
 $(document).ready(function() {
 
