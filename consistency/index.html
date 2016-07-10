@@ -208,30 +208,20 @@ $(document).ready(function() {
 
     $.getJSON("json/benchmarks_scores.json", function(json) {
 
-        //console.log('here... we got the benchmarks_scores' + JSON.stringify(json));
-
         _.each(categories, function(element, index) {
             options1.series[index].name = json[element['name']];
         });
-        //console.log('here... get the names right');
 
         var jsonData = json['data']
 
         var timestampColumn = _.map(_.pluck(jsonData, 0), Date.parse);
 
-        //console.log('here... call the friday function' + JSON.stringify(timestampColumn));
-        console.log('here... done with friday');
-
-        console.log('here... pluck start');
         _.each(categories, function(element, index) {
             var dataColumn = _.pluck(jsonData, element['place'])
             options1.series[index].data = _.zip(timestampColumn, dataColumn);
         });
-        console.log('here... pluck end');
 
-        //console.log('here... start the graph' + JSON.stringify(options1));
         var chart_consistency = new Highcharts.Chart(options1);
-        console.log('here... done with the graph');
         
     });
 
