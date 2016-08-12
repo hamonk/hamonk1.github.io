@@ -26,40 +26,25 @@
 
 $(document).ready(function() {
 
-  var mapquestUrl = 'http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png';
-  var subDomains = ['otile1', 'otile2', 'otile3', 'otile4'];
-  var mapquestAttrib = '<a href="http://open.mapquest.com" target="_blank">MapQuest</a>, <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a>';
+var map;
+var ajaxRequest;
+var plotlist;
+var plotlayers=[];
 
-  var _map = undefined;
+function initmap() {
+	// set up the map
+	map = new L.Map('map');
 
-  var _setupMap = function(mapDiv) {
-    var options = {
-      /*ID of element on the page where you want the map added*/
-      zoom: 3,
-      /*initial zoom level of the map*/
-      latLng: {
-        lat: 12.65000000,
-        lng: -8.00000000
-      },
-      /*center of map in latitude/longitude */
-      mtype: 'osm',
-      bestFitMargin: 0,
-      /*margin offset from the map viewport when applying a bestfit on shapes*/
-      zoomOnDoubleClick: true, /*zoom in when double-clicking on map*/
-      zoomControl: true, /*don't show the zoom control, it will be added later*/
-      scrollWheelZoom: true,
+	// create the tile layer with correct attribution
+	var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+	var osm = new L.TileLayer(osmUrl, {minZoom: 1, maxZoom: 12, attribution: osmAttrib});
 
-    };
+	// start the map in South-East England
+	map.setView(new L.LatLng(39.0997, -94.5786), 4);
+	map.addLayer(osm);
 
-    _map = L.map(mapDiv[0], options).setView([options.latLng.lat, options.latLng.lng], options.zoom);
-
-    var mapquest = new L.TileLayer(mapquestUrl, {
-      maxZoom: 18,
-      attribution: mapquestAttrib,
-      subdomains: subDomains
-    }).addTo(_map);
-
-    $.getJSON("json/ref_content.json", function(json) {
+	$.getJSON("json/ref_content.json", function(json) {
 
       var jsonData = json['onds'];
       var serie = [];
@@ -70,14 +55,14 @@ $(document).ready(function() {
         serie.push([origin,destination])
       }
 
-    var polygon = L.multiPolygon(serie, {weight:1,color:'#6699FF',opacity:0.2}).addTo(_map);
+    var polygon = L.multiPolygon(serie, {weight:1,color:'#6699FF',opacity:1}).addTo(map);
 
     });
-  };
 
-  // Bootstrap
-  var $el = $("#map");
-  _setupMap($el);
+
+}
+
+initmap();
 
 });
 
