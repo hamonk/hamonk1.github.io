@@ -1,6 +1,7 @@
 # R examples
 https://hamonk.github.io/basic_svm/
-https://hamonk.github.io/smv_tune_visualization
+
+https://hamonk.github.io/svm_tune_visualization
 
 # map the origin/destinations from a file on a leaflet map
 
