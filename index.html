@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>Visualization with Highcharts</h3>
+<a href="quality" >Display quality and issues of our consistency monitoring</a>
+
+<h3>Leaflet map to show a list of {origin, destination}</h3>
+<a href="map_ref_content">Map the origin/destinations from a file on a leaflet map</a>
+
+<h4>Details</h4>
+
+Load the json file with the origins & destinations.<br>
+
+The json file is a list of origin/destination with the latitude/longitude information, for example:<br>
+<pre>
+<code>
+{
+"origin": 
+  {"iata_code": "ZRH", 
+   "location": 
+      {"latitude": 47.36667, 
+       "longitude": 8.55}
+  },
+  
+"destination": 
+  {"iata_code": "OLB",
+   "location": 
+      {"latitude": 40.92137,
+       "longitude": 9.48563}
+       }
+  }
+}
+</code>
+</pre>
+Then a leaflet polygon is drawn on the map.
+
+<h3>R examples</h3>
+<ul>
+<li><a href="basic_svm">Basic svm in R</a></li>
+<li><a href="svm_tune_visualization">SVM in R with some visualization</a></li>
+</ul>
+
+</body>
+</html>
+
