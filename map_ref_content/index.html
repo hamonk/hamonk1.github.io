@@ -44,7 +44,7 @@ function initmap() {
 	map.setView(new L.LatLng(39.0997, -94.5786), 4);
 	map.addLayer(osm);
 
-	$.getJSON("json/ref_content.json", function(json) {
+	$.getJSON("json/ref_content_sample.json", function(json) {
 
       var jsonData = json['onds'];
       var serie = [];
