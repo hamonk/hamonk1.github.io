@@ -1,3 +1,6 @@
+# Drivendata.org competition submission: forecast power consumption
+https://github.com/hamonk/power-law-consumption/blob/master/power%20law%20consumption.ipynb
+
 # Display quality and issues of our consistency monitoring
 
 https://hamonk.github.io/quality/
